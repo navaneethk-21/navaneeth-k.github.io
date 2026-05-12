@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Navaneeth Kombilath | Physics Researcher</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0a0d13;
+      --surface: #111520;
+      --surface2: #181e2e;
+      --border: #1e2a42;
+      --accent: #4f9cf9;
+      --accent2: #7dd3c8;
+      --text: #dce6f5;
+      --muted: #6b7fa3;
+      --highlight: #f0e6c8;
+      --tag-bg: #162033;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'EB Garamond', Georgia, serif;
+      font-size: 18px;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    /* ── STARFIELD ── */
+    #stars {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+    #stars span {
+      position: absolute;
+      border-radius: 50%;
+      background: white;
+      animation: twinkle var(--d, 4s) ease-in-out infinite;
+      opacity: 0;
+    }
+    @keyframes twinkle {
+      0%, 100% { opacity: 0; }
+      50% { opacity: var(--op, 0.6); }
+    }
+
+    /* ── LAYOUT ── */
+    .page { position: relative; z-index: 1; }
+
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem 3rem;
+      background: rgba(10, 13, 19, 0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-logo {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.85rem;
+      color: var(--accent);
+      letter-spacing: 0.08em;
+      text-decoration: none;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2.2rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.78rem;
+      color: var(--muted);
+      text-decoration: none;
+      letter-spacing: 0.06em;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--accent); }
+
+    /* ── HERO ── */
+    #home {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding: 6rem 3rem 4rem;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .hero-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: center;
+      width: 100%;
+    }
+
+    .hero-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--accent);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      margin-bottom: 1.2rem;
+      opacity: 0;
+      animation: fadeUp 0.8s 0.2s forwards;
+    }
+
+    .hero-name {
+      font-size: clamp(2.6rem, 5vw, 4rem);
+      font-weight: 500;
+      line-height: 1.1;
+      color: var(--highlight);
+      margin-bottom: 0.6rem;
+      opacity: 0;
+      animation: fadeUp 0.8s 0.4s forwards;
+    }
+
+    .hero-title {
+      font-size: 1.15rem;
+      color: var(--muted);
+      font-style: italic;
+      margin-bottom: 1.6rem;
+      opacity: 0;
+      animation: fadeUp 0.8s 0.6s forwards;
+    }
+
+    .hero-bio {
+      font-size: 1rem;
+      color: var(--text);
+      max-width: 480px;
+      margin-bottom: 2rem;
+      opacity: 0;
+      animation: fadeUp 0.8s 0.8s forwards;
+    }
+
+    .hero-links {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      opacity: 0;
+      animation: fadeUp 0.8s 1s forwards;
+    }
+
+    .btn {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.78rem;
+      letter-spacing: 0.06em;
+      padding: 0.6rem 1.4rem;
+      border-radius: 4px;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    .btn-primary {
+      background: var(--accent);
+      color: #0a0d13;
+    }
+    .btn-primary:hover { background: #79b8ff; }
+    .btn-outline {
+      border: 1px solid var(--border);
+      color: var(--muted);
+    }
+    .btn-outline:hover { border-color: var(--accent); color: var(--accent); }
+
+    .hero-visual {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      opacity: 0;
+      animation: fadeIn 1.2s 0.6s forwards;
+    }
+
+    .orbit-diagram {
+      width: 300px;
+      height: 300px;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+    @keyframes rotate { to { transform: rotate(360deg); } }
+    @keyframes rotateR { to { transform: rotate(-360deg); } }
+
+    /* ── SECTIONS ── */
+    section {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 5rem 3rem;
+    }
+
+    .section-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--accent);
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+    }
+
+    .section-title {
+      font-size: 2.2rem;
+      font-weight: 500;
+      color: var(--highlight);
+      margin-bottom: 2.5rem;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 0.8rem;
+    }
+
+    /* ── RESEARCH INTERESTS ── */
+    .interests-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.2rem;
+    }
+
+    .interest-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.4rem 1.6rem;
+      transition: border-color 0.25s, transform 0.25s;
+      position: relative;
+      overflow: hidden;
+    }
+    .interest-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 3px; height: 100%;
+      background: var(--accent);
+      opacity: 0;
+      transition: opacity 0.25s;
+    }
+    .interest-card:hover { border-color: var(--accent); transform: translateY(-3px); }
+    .interest-card:hover::before { opacity: 1; }
+
+    .interest-icon { font-size: 1.6rem; margin-bottom: 0.6rem; }
+    .interest-title {
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: var(--highlight);
+      margin-bottom: 0.4rem;
+    }
+    .interest-desc { font-size: 0.9rem; color: var(--muted); line-height: 1.5; }
+
+    /* ── PROJECTS / RESEARCH EXPERIENCE ── */
+    .project-list { display: flex; flex-direction: column; gap: 1.8rem; }
+
+    .project-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.6rem 1.8rem;
+      transition: border-color 0.2s;
+    }
+    .project-card:hover { border-color: var(--accent2); }
+
+    .project-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-bottom: 0.6rem;
+    }
+
+    .project-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--highlight);
+    }
+
+    .project-date {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+
+    .project-inst {
+      font-size: 0.88rem;
+      color: var(--accent2);
+      margin-bottom: 0.8rem;
+      font-style: italic;
+    }
+
+    .project-desc { font-size: 0.95rem; color: var(--text); margin-bottom: 1rem; }
+
+    .project-desc li { margin-left: 1.4rem; margin-bottom: 0.3rem; font-size: 0.93rem; color: var(--muted); }
+
+    .tags { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .tag {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.68rem;
+      padding: 0.2rem 0.65rem;
+      border-radius: 20px;
+      background: var(--tag-bg);
+      color: var(--accent);
+      border: 1px solid var(--border);
+      letter-spacing: 0.04em;
+    }
+
+    /* ── PUBLICATIONS ── */
+    .pub-list { display: flex; flex-direction: column; gap: 1.4rem; }
+    .pub-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.4rem 1.6rem;
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+    }
+    .pub-num {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--accent);
+      min-width: 28px;
+      padding-top: 0.15rem;
+    }
+    .pub-content {}
+    .pub-title { font-size: 1rem; font-weight: 500; color: var(--highlight); margin-bottom: 0.3rem; }
+    .pub-meta { font-size: 0.85rem; color: var(--muted); font-style: italic; }
+    .pub-badge {
+      display: inline-block;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      padding: 0.15rem 0.55rem;
+      border-radius: 3px;
+      background: rgba(79,156,249,0.12);
+      color: var(--accent);
+      border: 1px solid rgba(79,156,249,0.3);
+      margin-top: 0.5rem;
+    }
+
+    /* ── CV ── */
+    .cv-section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 2rem;
+      text-align: center;
+    }
+    .cv-icon { font-size: 2.5rem; margin-bottom: 1rem; }
+    .cv-text { color: var(--muted); margin-bottom: 1.4rem; font-size: 0.95rem; }
+
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-top: 2rem;
+      text-align: left;
+    }
+    .skill-group { }
+    .skill-group-title {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--accent);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 0.6rem;
+    }
+    .skill-group ul { list-style: none; }
+    .skill-group li { font-size: 0.88rem; color: var(--muted); padding: 0.15rem 0; }
+    .skill-group li::before { content: '› '; color: var(--accent2); }
+
+    /* ── CONTACT ── */
+    .contact-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.2rem;
+    }
+    .contact-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.4rem;
+      text-decoration: none;
+      transition: border-color 0.2s, transform 0.2s;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+    .contact-card:hover { border-color: var(--accent); transform: translateY(-3px); }
+    .contact-card-icon { font-size: 1.4rem; }
+    .contact-card-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+    .contact-card-value { font-size: 0.95rem; color: var(--highlight); }
+
+    /* ── FOOTER ── */
+    footer {
+      text-align: center;
+      padding: 2rem;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--muted);
+      border-top: 1px solid var(--border);
+    }
+
+    /* ── DIVIDER ── */
+    .divider { border: none; border-top: 1px solid var(--border); margin: 0 3rem; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 700px) {
+      nav { padding: 1rem 1.4rem; }
+      .nav-links { gap: 1.2rem; }
+      #home { padding: 5rem 1.4rem 3rem; }
+      .hero-inner { grid-template-columns: 1fr; }
+      .hero-visual { display: none; }
+      section { padding: 3.5rem 1.4rem; }
+      .divider { margin: 0 1.4rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Starfield -->
+<div id="stars"></div>
+
+<div class="page">
+
+  <!-- NAV -->
+  <nav>
+    <a class="nav-logo" href="#home">NK//</a>
+    <ul class="nav-links">
+      <li><a href="#research">Research</a></li>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#publications">Publications</a></li>
+      <li><a href="#cv">CV</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <section id="home" style="border:none;padding-top:0;">
+    <div class="hero-inner">
+      <div>
+        <div class="hero-label">Physics Researcher · IISER Thiruvananthapuram</div>
+        <h1 class="hero-name">Navaneeth<br>Kombilath</h1>
+        <p class="hero-title">BS-MS Dual Degree · 5th Year Physics Major</p>
+        <p class="hero-bio">
+          I work at the intersection of dark matter phenomenology, compact objects, and beyond-Standard-Model physics. My current thesis investigates dark matter constraints from neutron star cooling, combining nuclear equations of state with DM-induced emissivity channels.
+        </p>
+        <div class="hero-links">
+          <a class="btn btn-primary" href="#research">Research</a>
+          <a class="btn btn-outline" href="mailto:navaneeth123k@gmail.com">Email Me</a>
+          <a class="btn btn-outline" href="https://github.com/navaneeth-k" target="_blank">GitHub</a>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <!-- Animated neutron star / orbit SVG -->
+        <svg class="orbit-diagram" viewBox="0 0 300 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <radialGradient id="starGlow" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#7dd3c8" stop-opacity="0.9"/>
+              <stop offset="60%" stop-color="#4f9cf9" stop-opacity="0.4"/>
+              <stop offset="100%" stop-color="#4f9cf9" stop-opacity="0"/>
+            </radialGradient>
+            <radialGradient id="coreGrad" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#e8f4ff"/>
+              <stop offset="50%" stop-color="#7dd3c8"/>
+              <stop offset="100%" stop-color="#4f9cf9"/>
+            </radialGradient>
+          </defs>
+
+          <!-- Glow -->
+          <circle cx="150" cy="150" r="90" fill="url(#starGlow)" opacity="0.35"/>
+
+          <!-- Orbits -->
+          <ellipse cx="150" cy="150" rx="115" ry="42" stroke="#1e2a42" stroke-width="1" opacity="0.8"/>
+          <ellipse cx="150" cy="150" rx="80" ry="80" stroke="#1e2a42" stroke-width="1" opacity="0.5" stroke-dasharray="4 6"/>
+          <ellipse cx="150" cy="150" rx="55" ry="20" stroke="#1e2a42" stroke-width="1" opacity="0.6" transform="rotate(-30 150 150)"/>
+
+          <!-- Rotating ring -->
+          <g style="transform-origin:150px 150px; animation: rotate 12s linear infinite;">
+            <ellipse cx="150" cy="150" rx="115" ry="42" stroke="#4f9cf9" stroke-width="1.2" fill="none" opacity="0.3"/>
+            <circle cx="265" cy="150" r="5" fill="#4f9cf9" opacity="0.9"/>
+          </g>
+
+          <!-- Counter-rotating -->
+          <g style="transform-origin:150px 150px; animation: rotateR 18s linear infinite;">
+            <circle cx="150" cy="70" r="4" fill="#7dd3c8" opacity="0.8"/>
+          </g>
+
+          <!-- Neutron star core -->
+          <circle cx="150" cy="150" r="22" fill="url(#coreGrad)"/>
+          <circle cx="150" cy="150" r="14" fill="white" opacity="0.15"/>
+          <circle cx="144" cy="144" r="5" fill="white" opacity="0.4"/>
+
+          <!-- Tick marks (equatorial) -->
+          <g opacity="0.4" stroke="#4f9cf9" stroke-width="1">
+            <line x1="150" y1="108" x2="150" y2="118"/>
+            <line x1="150" y1="182" x2="150" y2="192"/>
+            <line x1="108" y1="150" x2="118" y2="150"/>
+            <line x1="182" y1="150" x2="192" y2="150"/>
+          </g>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider"/>
+
+  <!-- RESEARCH INTERESTS -->
+  <section id="research">
+    <div class="section-label">01 / Research</div>
+    <h2 class="section-title">Research Interests</h2>
+    <div class="interests-grid">
+      <div class="interest-card">
+        <div class="interest-icon">⭐</div>
+        <div class="interest-title">Dark Matter Phenomenology</div>
+        <div class="interest-desc">Constraints on dark matter properties from astrophysical observations, including neutron star cooling and baryon-number-violating interactions.</div>
+      </div>
+      <div class="interest-card">
+        <div class="interest-icon">🌀</div>
+        <div class="interest-title">Compact Objects & Neutron Stars</div>
+        <div class="interest-desc">Structural and thermal modelling of neutron stars, nuclear equations of state, and TOV equation solutions for DM-admixed configurations.</div>
+      </div>
+      <div class="interest-card">
+        <div class="interest-icon">⚛️</div>
+        <div class="interest-title">Beyond Standard Model Physics</div>
+        <div class="interest-desc">BSM interaction Lagrangians, colour-triplet extensions, amplitude-level calculations for DM annihilation and mediator-scale constraints.</div>
+      </div>
+      <div class="interest-card">
+        <div class="interest-icon">🔭</div>
+        <div class="interest-title">Early Universe Cosmology</div>
+        <div class="interest-desc">Boltzmann equation integration for thermal freeze-out, relic abundance calculations, and DM decoupling from the primordial thermal bath.</div>
+      </div>
+      <div class="interest-card">
+        <div class="interest-icon">📐</div>
+        <div class="interest-title">Alternative Spacetime Frameworks</div>
+        <div class="interest-desc">Six-dimensional (3,3)-signature spacetime, quantum nonlocality, and spacetime-symmetry interpretations of weak interaction structure.</div>
+      </div>
+      <div class="interest-card">
+        <div class="interest-icon">💥</div>
+        <div class="interest-title">High Energy Astrophysics</div>
+        <div class="interest-desc">Statistical analysis of gamma-ray burst duration–hardness distributions using skewed statistical models.</div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider"/>
+
+  <!-- PROJECTS / RESEARCH EXPERIENCE -->
+  <section id="projects">
+    <div class="section-label">02 / Projects</div>
+    <h2 class="section-title">Research Experience</h2>
+    <div class="project-list">
+
+      <div class="project-card">
+        <div class="project-meta">
+          <div class="project-title">Dark Matter Constraints with Neutron Star Cooling</div>
+          <div class="project-date">Apr 2025 – Present</div>
+        </div>
+        <div class="project-inst">Master's Thesis · LPTHE, Sorbonne Université & IISER TVM</div>
+        <div class="project-desc">
+          Supervisors: Prof. Silvia Manconi (LPTHE), Prof. Mathew Arun Thomas (IISER TVM), Consultation: Prof. Dany Page (UNAM)
+          <ul>
+            <li>Solved the Tolman–Oppenheimer–Volkoff equations for realistic nuclear EoS to obtain structural profiles of DM-admixed neutron stars.</li>
+            <li>Re-derived neutrino emissivity from DM-induced heating at amplitude level; extended calculation to DM-induced neutron decay — a previously undocumented emissivity channel.</li>
+            <li>Implemented both heating mechanisms as a dedicated subroutine inside NSCool; resulting cooling curves exhibit clear deviations from standard neutron-star evolution.</li>
+          </ul>
+        </div>
+        <div class="tags">
+          <span class="tag">NSCool</span><span class="tag">TOV Equations</span><span class="tag">Nuclear EoS</span><span class="tag">Dark Matter</span><span class="tag">Neutrino Emissivity</span><span class="tag">Fortran</span>
+        </div>
+      </div>
+
+      <div class="project-card">
+        <div class="project-meta">
+          <div class="project-title">Nucleon – Light Dark Matter Annihilation via Baryon Number Violation</div>
+          <div class="project-date">Nov 2024 – Jan 2025</div>
+        </div>
+        <div class="project-inst">IISER TVM · Guide: Dr. Mathew Arun Thomas</div>
+        <div class="project-desc">
+          <ul>
+            <li>Investigated baryon-number-violating DM annihilation in colour-triplet extensions of the Standard Model, focusing on fermionic DM stability near the proton mass.</li>
+            <li>Derived mediator-scale (mΦ) constraints up to 10⁷ GeV from Super-Kamiokande data; compared Majorana and Dirac DM bounds.</li>
+          </ul>
+        </div>
+        <div class="tags">
+          <span class="tag">BSM Physics</span><span class="tag">Baryon Number Violation</span><span class="tag">Super-Kamiokande</span><span class="tag">Fermionic DM</span>
+        </div>
+      </div>
+
+      <div class="project-card">
+        <div class="project-meta">
+          <div class="project-title">Six-Dimensional Spacetime with (3,3) Signature</div>
+          <div class="project-date">May 2024 – Nov 2024</div>
+        </div>
+        <div class="project-inst">TIFR Pune · Guide: Prof. Tejinder Pal Singh</div>
+        <div class="project-desc">
+          <ul>
+            <li>Worked within Prof. Singh's (3,3)-signature framework exploring classical/quantum sector embedding in different submanifolds.</li>
+            <li>Explored spacetime-symmetry interpretations of weak-interaction structure; strengthened background in abstract field-theoretic model building.</li>
+          </ul>
+        </div>
+        <div class="tags">
+          <span class="tag">Quantum Field Theory</span><span class="tag">Spacetime Symmetry</span><span class="tag">Extra Dimensions</span>
+        </div>
+      </div>
+
+      <div class="project-card">
+        <div class="project-meta">
+          <div class="project-title">Dark Matter Freeze-Out via Boltzmann Equation</div>
+          <div class="project-date">May 2024 – Jun 2024</div>
+        </div>
+        <div class="project-inst">IIT Guwahati (Summer Project) · Guide: Dr. Subhaditya Bhattacharya</div>
+        <div class="project-desc">
+          <ul>
+            <li>Developed a numerical model of the Boltzmann equation to analyze thermal freeze-out and DM decoupling from the early universe's thermal bath.</li>
+            <li>Used Python and Mathematica to solve differential equations and visualize dark matter density evolution; compared with observational data.</li>
+          </ul>
+        </div>
+        <div class="tags">
+          <span class="tag">Boltzmann Equation</span><span class="tag">Thermal Freeze-Out</span><span class="tag">Python</span><span class="tag">Mathematica</span><span class="tag">Relic Abundance</span>
+        </div>
+      </div>
+
+      <div class="project-card">
+        <div class="project-meta">
+          <div class="project-title">Duration–Hardness Ratio Analysis of Gamma-Ray Bursts</div>
+          <div class="project-date">May 2023 – Aug 2023</div>
+        </div>
+        <div class="project-inst">IIT Hyderabad (Self-study) · Guide: Prof. Shantanu Desai</div>
+        <div class="project-desc">
+          <ul>
+            <li>Reproduced results from a research article on GRB classification using skewed statistical distributions in the duration–hardness ratio plane.</li>
+            <li>Gained foundational skills in astrophysical data analysis methods.</li>
+          </ul>
+        </div>
+        <div class="tags">
+          <span class="tag">Gamma-Ray Bursts</span><span class="tag">Statistical Analysis</span><span class="tag">Data Analysis</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <hr class="divider"/>
+
+  <!-- PUBLICATIONS & POSTERS -->
+  <section id="publications">
+    <div class="section-label">03 / Publications</div>
+    <h2 class="section-title">Publications & Presentations</h2>
+    <div class="pub-list">
+
+      <div class="pub-card">
+        <div class="pub-num">[P1]</div>
+        <div class="pub-content">
+          <div class="pub-title">Neutron Star Cooling due to Dark Matter–Induced Neutron Decay</div>
+          <div class="pub-meta">Navaneeth Kombilath · National Undergraduate Physics Conference (NUPC), IISER Tirupati, December 2025</div>
+          <span class="pub-badge">Poster Presentation</span>
+        </div>
+      </div>
+
+      <div class="pub-card">
+        <div class="pub-num">[A1]</div>
+        <div class="pub-content">
+          <div class="pub-title">Indian Patent No. 569461 (2024)</div>
+          <div class="pub-meta">Co-inventor · "A Photodarlington Sensor-Based Device for Fluorometric Analysis and a Process Thereof" · Government of India</div>
+          <span class="pub-badge">Patent Granted</span>
+        </div>
+      </div>
+
+      <div class="pub-card">
+        <div class="pub-num">[C1]</div>
+        <div class="pub-content">
+          <div class="pub-title">Frontier Symposium in Physics 2024 (FSP 2024)</div>
+          <div class="pub-meta">Participant · IISER Thiruvananthapuram, 2024</div>
+          <span class="pub-badge">Conference</span>
+        </div>
+      </div>
+
+      <div class="pub-card">
+        <div class="pub-num">[A2]</div>
+        <div class="pub-content">
+          <div class="pub-title">iGEM 2023 — Best Diagnostics Project & Gold Medal</div>
+          <div class="pub-meta">Hardware Team Head · Grand Jamboree, Paris, France · Developed OASYS — a microfluidic device for clinical depression diagnostics</div>
+          <span class="pub-badge">Award</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <hr class="divider"/>
+
+  <!-- CV -->
+  <section id="cv">
+    <div class="section-label">04 / Curriculum Vitae</div>
+    <h2 class="section-title">CV & Skills</h2>
+
+    <div class="cv-section">
+      <div class="cv-icon">📄</div>
+      <p class="cv-text">Download my full curriculum vitae for complete details on research, coursework, and achievements.</p>
+      <a class="btn btn-primary" href="CV_NK.pdf" download>Download CV (PDF)</a>
+    </div>
+
+    <div class="skills-grid">
+      <div class="skill-group">
+        <div class="skill-group-title">Scientific Computing</div>
+        <ul>
+          <li>Python (NumPy, SciPy, Matplotlib)</li>
+          <li>Mathematica</li>
+          <li>Fortran (NSCool modifications)</li>
+          <li>Stiff ODE integration (TOV, Boltzmann)</li>
+        </ul>
+      </div>
+      <div class="skill-group">
+        <div class="skill-group-title">Physics Methods</div>
+        <ul>
+          <li>BSM amplitude-level calculations</li>
+          <li>Boltzmann relic-abundance integration</li>
+          <li>Compact object thermal modelling</li>
+          <li>Nuclear equations of state</li>
+        </ul>
+      </div>
+      <div class="skill-group">
+        <div class="skill-group-title">Tools & Writing</div>
+        <ul>
+          <li>LaTeX</li>
+          <li>Git</li>
+        </ul>
+      </div>
+      <div class="skill-group">
+        <div class="skill-group-title">Coursework</div>
+        <ul>
+          <li>Quantum Field Theory</li>
+          <li>General Relativity & Cosmology</li>
+          <li>High Energy & Particle Physics</li>
+          <li>Quantum Information Theory</li>
+          <li>Condensed Matter Physics I & II</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider"/>
+
+  <!-- CONTACT -->
+  <section id="contact">
+    <div class="section-label">05 / Contact</div>
+    <h2 class="section-title">Get in Touch</h2>
+    <div class="contact-grid">
+      <a class="contact-card" href="mailto:navaneeth123k@gmail.com">
+        <div class="contact-card-icon">✉️</div>
+        <div class="contact-card-label">Email</div>
+        <div class="contact-card-value">navaneeth123k@gmail.com</div>
+      </a>
+      <a class="contact-card" href="https://github.com/navaneeth-k" target="_blank">
+        <div class="contact-card-icon">⌨️</div>
+        <div class="contact-card-label">GitHub</div>
+        <div class="contact-card-value">navaneeth-k</div>
+      </a>
+      <div class="contact-card">
+        <div class="contact-card-icon">📍</div>
+        <div class="contact-card-label">Location</div>
+        <div class="contact-card-value">Kannur, Kerala, India</div>
+      </div>
+      <div class="contact-card">
+        <div class="contact-card-icon">🎓</div>
+        <div class="contact-card-label">Institution</div>
+        <div class="contact-card-value">IISER Thiruvananthapuram</div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p>© 2025 Navaneeth Kombilath · Built with HTML/CSS · Hosted on GitHub Pages</p>
+  </footer>
+
+</div>
+
+<script>
+  // Generate starfield
+  const container = document.getElementById('stars');
+  for (let i = 0; i < 160; i++) {
+    const s = document.createElement('span');
+    const size = Math.random() * 2.2 + 0.4;
+    s.style.cssText = `
+      width:${size}px; height:${size}px;
+      left:${Math.random()*100}%;
+      top:${Math.random()*100}%;
+      --d:${(Math.random()*5+2).toFixed(1)}s;
+      --op:${(Math.random()*0.5+0.2).toFixed(2)};
+      animation-delay:${(Math.random()*6).toFixed(1)}s;
+    `;
+    container.appendChild(s);
+  }
+
+  // Smooth section reveal on scroll
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.style.opacity = '1';
+        e.target.style.transform = 'translateY(0)';
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.interest-card, .project-card, .pub-card, .contact-card').forEach(el => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(16px)';
+    el.style.transition = 'opacity 0.5s ease, transform 0.5s ease, border-color 0.2s';
+    observer.observe(el);
+  });
+</script>
+
+</body>
+</html>
